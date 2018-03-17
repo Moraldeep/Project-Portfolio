@@ -1,36 +1,21 @@
 # Forecasting Weather for year 2017
-
+n = 315 #Number of Test Location
 library(readr)
-Training_Weather_2015 <- read_csv("Training_Weather_2015.csv")
-Test_Weather_Dataset_updated <- read_csv("~/Desktop/Sngenta Crop/All Crop Challenge Data/Test Data/Test_Weather_Dataset_updated.csv")
+Test_Weather <- read_csv("Test_Weather_Dataset.csv")
 library("forecast")
 library("tseries")
 library("ggplot2")
-pred <- matrix(0,315,ncol(Test_Weather_Dataset_updated)-16)
-for (i in 1:315)
+pred <- matrix(0,n,ncol(Test_Weather)-16)
+for (i in 1:n)
 {
-  if(!(i %in% Test_Weather_Dataset_updated$Test_Location_ID))
+  if(!(i %in% Test_Weather$Test_Location_ID))
   {
     i = i+1
   }  
-    for(j in 17:ncol(Test_Weather_Dataset_updated))
+    for(j in 17:ncol(Test_Weather))
     {
-      mylist<- Test_Weather_Dataset_updated[which(Test_Weather_Dataset_updated$Test_Location_ID==i),j]
+      mylist<- Test_Weather[which(Test_Weather$Test_Location_ID==i),j]
       mylist <- mylist[lapply(mylist,length)>0]
       pred[[i,j-16]] <- forecast(auto.arima(mylist),1)$mean[1]
-    }
-}
-pred_val <- matrix(0,2249,ncol(Training_Weather_2015)-16)
-for (i in 1:2249)
-{
-  if(!(i %in% Training_Weather_2015$Location_ID))
-  {
-    i = i+1
-  }  
-    for(j in 17:ncol(Training_Weather_2015))
-    {
-      mylist<- Training_Weather_2015[which(Training_Weather_2015$Location_ID==i),j]
-      mylist <- mylist[lapply(mylist,length)>0]
-      pred_val[[i,j-16]] <- forecast(auto.arima(mylist),1)$mean[1]
     }
 }
