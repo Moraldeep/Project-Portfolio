@@ -1,3 +1,5 @@
+# Map-Reduce code for counting number of line, no of unique words and total number of words in a large text file
+
 # Mapper
 
 import sys
@@ -5,11 +7,11 @@ import re
 
 for line in sys.stdin:
     line = line.strip() 
-    print('line_count',1)
-    line_n = re.sub(r'[^a-zA-Z0-9 ]',r'',line)
+    print('line_count',1) # For counting every new line
+    line_n = re.sub(r'[^a-zA-Z0-9 ]',r'',line) #to remove special character before the word
     word = line_n.split()
     for words in word:
-        for f in re.findall("([A-Z]+)", words):
+        for f in re.findall("([A-Z]+)", words): #to avoid double counting of upper case and lower case word
             words= word.replace(f, f.lower())
         print('%s \t %s' % (words,1))
         
@@ -51,7 +53,7 @@ count_unique_words = len(new_dict.keys())
 count_line = new_dict.get('line_count')
 
 print('Total_Line %s',count_line)
-print ('Total_words %s',(count_words -count_line))
+print ('Total_words %s',(count_words -count_line)) # To account for the word 'line_count'
 print ('Total_Unique words %s',count_unique_words)
 
 sorted_x = sorted(new_dict.items(), key=operator.itemgetter(1),reverse = True
