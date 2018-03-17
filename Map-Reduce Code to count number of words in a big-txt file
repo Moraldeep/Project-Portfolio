@@ -1,0 +1,58 @@
+# Mapper
+
+import sys
+import re
+
+for line in sys.stdin:
+    line = line.strip() 
+    print('line_count',1)
+    line_n = re.sub(r'[^a-zA-Z0-9 ]',r'',line)
+    word = line_n.split()
+    for words in word:
+        for f in re.findall("([A-Z]+)", words):
+            words= word.replace(f, f.lower())
+        print('%s \t %s' % (words,1))
+        
+        
+# Reducer
+
+import sys
+import re
+import operator
+
+Current_word = None
+count_words = 0
+count_unique_words = 0
+count_line = 0
+Word = None
+
+new_dict = {}
+
+for line in sys.stdin:
+    line = line.strip()
+    word, count = line.split('/t',1)
+    try:
+        count = int(count)
+    except ValueError:
+        continue
+
+    if current_word ==word:
+        current_count = current_count+count
+    else:
+        if current_word:
+            new_dict[current_word] = current_count
+        current_count = count
+        current_word = word
+        if current_word == word:
+            new_dict[current_word] = current_count
+
+count_words = sum(new_dict.values())
+count_unique_words = len(new_dict.keys())
+count_line = new_dict.get('line_count')
+
+print('Total_Line %s',count_line)
+print ('Total_words %s',(count_words -count_line))
+print ('Total_Unique words %s',count_unique_words)
+
+sorted_x = sorted(new_dict.items(), key=operator.itemgetter(1),reverse = True
+print(sorted_x)
